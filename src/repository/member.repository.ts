@@ -1,5 +1,5 @@
 import { MemberInputDTO, MemberInputUpdateDTO } from "../dto/member.dto";
-import { Member } from "../models/member.repository";
+import { Member } from "../models/member.model";
 
 export class MemberRepository {
   async save(data: MemberInputDTO) {
