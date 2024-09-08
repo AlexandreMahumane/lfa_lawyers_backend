@@ -4,50 +4,49 @@ import { UserService } from "../service/user.service";
 
 export class UserController {
   private userService = new UserService();
-  async register(response: Response, request: Request) {
+
+  async register(request: Request, response: Response) {
     const userInputDto: UserInputDTO = request.body;
 
     try {
-      const input = await this.userService.register(userInputDto);
-
-      response.status(201).json(input);
-    } catch (error) {
-      return response.status(500).send(error);
+      const user = await this.userService.register(userInputDto);
+      return response.status(201).json(user);
+    } catch (error: any) {
+      return response.status(400).json({ error: error.message });
     }
   }
 
-  async update(response: Response, request: Request) {
+  async update(request: Request, response: Response) {
     const userInputUpdateDTO: UserInputUpdateDTO = request.body;
-    const id: string = "66db8a534286479bd07789b2";
-    console.log(".");
+    const { id } = request.params;
+
     try {
-      const input = await this.userService.update(id, userInputUpdateDTO);
-      return response.status(200).json(input);
-    } catch (error) {
-      console.log(error);
-      return response.status(500).json(error);
+      const updatedUser = await this.userService.update(id, userInputUpdateDTO);
+      return response.status(200).json(updatedUser);
+    } catch (error: any) {
+      return response.status(400).json({ error: error.message });
     }
   }
 
-  async delete(response: Response, request: Request) {
-    const id: string = "66db8a534286479bd07789b2";
-    console.log(".");
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+
     try {
       await this.userService.delete(id);
-      return response.status(200).json();
-    } catch (error) {
-      console.log(error);
-      return response.status(500).json(error);
+      return response.status(204).send();
+    } catch (error: any) {
+      return response.status(400).json({ error: error.message });
     }
   }
-  async login(response: Response, request: Request) {
+
+  async login(request: Request, response: Response) {
     const userInputDto: UserInputDTO = request.body;
+
     try {
-      const input = await this.userService.login(userInputDto);
-      return response.status(200).json(input);
-    } catch (error) {
-      console.log(error);
-      return response.status(500).json(error);
+      const token = await this.userService.login(userInputDto);
+      return response.status(200).json(token);
+    } catch (error: any) {
+      return response.status(400).json({ error: error.message });
     }
   }
 }

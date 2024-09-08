@@ -6,15 +6,15 @@ const route = express.Router();
 const userController = new UserController();
 
 route.post("/register", (response, request) =>
-  userController.register(request, response)
+  userController.register(response, request)
 );
 route.put("/update", (response, request) =>
-  userController.update(request, response)
+  userController.update(response, request)
 );
 route.delete("/remove", (response, request) =>
-  userController.delete(request, response)
+  userController.delete(response, request)
 );
 route.post("/login", (response, request) =>
-  userController.login(request, response)
+  userController.login(response, request)
 );
 module.exports = route;

@@ -1,72 +1,62 @@
 import { UserInputDTO, UserInputUpdateDTO } from "../dto/user.dto";
 import { UserRepository } from "../repository/user.repository";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-require("dotenv").config();
+import AuthService from "./auth.service";
+
 export class UserService {
   private userRepository = new UserRepository();
+  private authService = new AuthService();
+
   async register(data: UserInputDTO) {
     const user = await this.userRepository.findByName(data.username);
-    console.log(user);
     if (user) {
-      return "username already exits";
+      throw new Error("Username already exists");
     }
 
     const hashPassword = await bcrypt.hash(data.password, 10);
-    const saveUser = await this.userRepository.save(
+    const savedUser = await this.userRepository.save(
       data.username,
       hashPassword
     );
-    return saveUser;
+
+    return savedUser;
   }
 
   async update(id: string, data: UserInputUpdateDTO) {
     const user = await this.userRepository.findById(id);
-
     if (!user) {
-      return "User not found";
-    }
-    let hashPassword: string;
-    if (data.password) {
-      hashPassword = await bcrypt.hash(data.password, 10);
+      throw new Error("User not found");
     }
 
-    const dataToUpdate: UserInputUpdateDTO = {
-      name: data.name,
-      // password: hashPassword
-    };
-    // const saveUser = await this.userRepository.update(data.username, hashPassword);
-    const username = await this.userRepository.findByName(data.name);
-    if (username) {
-      return "Name alread exists";
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
     }
-    const update = await this.userRepository.update(id, data);
-    console.log(update);
-    return update;
+
+    const existingUsername = await this.userRepository.findByName(data.name);
+    if (existingUsername && existingUsername._id !== id) {
+      throw new Error("Name already exists");
+    }
+
+    const updatedUser = await this.userRepository.update(id, data);
+    return updatedUser;
   }
 
   async delete(id: string) {
     const user = await this.userRepository.findById(id);
     if (!user) {
-      return "User not found";
+      throw new Error("User not found");
     }
 
     return await this.userRepository.delete(id);
   }
 
   async login(data: UserInputDTO) {
-    const user = await this.userRepository.findByNameAndPassword(
-      data.username,
-      data.password
-    );
-
-    if (!user) {
-      return "User not found";
+    const user = await this.userRepository.findByName(data.username);
+    if (!user || !(await bcrypt.compare(data.password, user.password))) {
+      throw new Error("Invalid username or password");
     }
-    const secret: string = process.env.JSON_SECRET || "l";
 
-    const token = await jwt.sign({ id: user._id }, secret);
-
-    return { token: token };
+    const token = this.authService.generateToken(user._id);
+    return { token };
   }
 }
