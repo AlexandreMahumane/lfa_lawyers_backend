@@ -8,16 +8,13 @@ export class UserService {
   private authService = new AuthService();
 
   async register(data: UserInputDTO) {
-    const user = await this.userRepository.findByName(data.username);
+    const user = await this.userRepository.findByName(data.name);
     if (user) {
       throw new Error("Username already exists");
     }
 
     const hashPassword = await bcrypt.hash(data.password, 10);
-    const savedUser = await this.userRepository.save(
-      data.username,
-      hashPassword
-    );
+    const savedUser = await this.userRepository.save(data.name, hashPassword);
 
     return savedUser;
   }
@@ -51,12 +48,13 @@ export class UserService {
   }
 
   async login(data: UserInputDTO) {
-    const user = await this.userRepository.findByName(data.username);
+    const user = await this.userRepository.findByName(data.name);
     if (!user || !(await bcrypt.compare(data.password, user.password))) {
       throw new Error("Invalid username or password");
     }
 
     const token = this.authService.generateToken(user._id);
-    return { token };
+
+    return token;
   }
 }

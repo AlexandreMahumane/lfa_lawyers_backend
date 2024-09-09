@@ -1,13 +1,14 @@
 import express from "express";
 import { ContentController } from "../controllers/content.controller";
+import { VerifyToken } from "../middleware/verify-token";
 
 const route = express.Router();
 
 const contentController = new ContentController();
-route.post("/insert", (response, request) =>
+route.post("/insert", VerifyToken, (response, request) =>
   contentController.insert(request, response)
 );
-route.put("/update", (response, request) =>
+route.put("/update", VerifyToken, (response, request) =>
   contentController.update(request, response)
 );
 

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const UserInputDTO = z.object({
-  username: z.string().min(2),
+  name: z.string().min(2),
   password: z.string().min(3),
 });
 const UserInputUpdateDTO = z.object({

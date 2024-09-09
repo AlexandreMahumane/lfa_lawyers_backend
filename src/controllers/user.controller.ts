@@ -44,9 +44,17 @@ export class UserController {
 
     try {
       const token = await this.userService.login(userInputDto);
-      return response.status(200).json(token);
+      response.cookie("auth_token", token, { httpOnly: true });
+      return response.status(200).json();
     } catch (error: any) {
       return response.status(400).json({ error: error.message });
     }
+  }
+  async logout(request: Request, response: Response) {
+    response.clearCookie("auth_token", {
+      httpOnly: true,
+      sameSite: "strict",
+    });
+    return response.status(200).json();
   }
 }

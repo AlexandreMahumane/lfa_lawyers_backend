@@ -1,5 +1,6 @@
 import express from "express";
 import { connectDB } from "./database/index";
+import cookieParser from "cookie-parser";
 require("dotenv").config();
 
 const port = process.env.PORT;
@@ -7,6 +8,7 @@ const app = express();
 app.use(express.json());
 connectDB();
 
+app.use(cookieParser());
 app.use("/user", require("./routes/user-route"));
 app.use("/contact", require("./routes/contacts-route"));
 app.use("/member", require("./routes/member-route"));
