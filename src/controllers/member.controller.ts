@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { MemberService } from "../service/member.service";
 import { MemberInputDTO, MemberInputUpdateDTO } from "../dto/member.dto";
-
+import { uploadImage } from "../service/cloudinary";
 export class MemberController {
   private memberService = new MemberService();
 
@@ -16,6 +16,7 @@ export class MemberController {
 
   async insert(response: Response, request: Request) {
     const memberDto: MemberInputDTO = request.body;
+
     try {
       const input = await this.memberService.insert(memberDto);
       return response.status(201).json(input);
@@ -43,5 +44,13 @@ export class MemberController {
     } catch (error: any) {
       return response.status(400).json({ errorMessage: error.message });
     }
+  }
+
+  async upload(response: Response, request: Request) {
+    // const f = request.fi
+    // console.log(request.);
+    const { path } = request.body;
+    const j = await uploadImage(path);
+    return response.status(200).json(j);
   }
 }

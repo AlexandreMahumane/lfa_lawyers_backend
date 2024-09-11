@@ -1,6 +1,8 @@
 import express from "express";
 import { MemberController } from "../controllers/member.controller";
 import { VerifyToken } from "../middleware/verify-token";
+import { uploadImage } from "../controllers/cloudinary";
+import upload from "../middleware/multer";
 
 const route = express.Router();
 const memberController = new MemberController();
@@ -9,6 +11,9 @@ route.get("/show", (request, response) =>
 );
 route.post("/insert", VerifyToken, (request, response) =>
   memberController.insert(response, request)
+);
+route.post("/i", upload.single("image"), (request, response) =>
+  uploadImage(request, response)
 );
 route.put("/update/:id", VerifyToken, (request, response) =>
   memberController.update(response, request)
