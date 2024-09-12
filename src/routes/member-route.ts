@@ -9,17 +9,24 @@ const memberController = new MemberController();
 route.get("/show", (request, response) =>
   memberController.show(response, request)
 );
-route.post("/insert", VerifyToken, (request, response) =>
-  memberController.insert(response, request)
+route.post(
+  "/insert",
+  VerifyToken,
+  upload.single("image"),
+  (request, response) => memberController.insert(response, request)
 );
-route.post("/i", upload.single("image"), (request, response) =>
-  uploadImage(request, response)
+
+route.put(
+  "/update/:id",
+  VerifyToken,
+  upload.single("image"),
+  (request, response) => memberController.update(response, request)
 );
-route.put("/update/:id", VerifyToken, (request, response) =>
-  memberController.update(response, request)
-);
-route.delete("/delete/:id", VerifyToken, (request, response) =>
-  memberController.delete(response, request)
+route.delete(
+  "/delete/:id",
+  VerifyToken,
+  upload.single("image"),
+  (request, response) => memberController.delete(response, request)
 );
 
 module.exports = route;

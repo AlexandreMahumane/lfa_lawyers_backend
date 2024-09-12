@@ -1,15 +1,4 @@
 import cloudinary from "../config/cloudinary";
-
-// export const uploadImage = async (imagePath: string) => {
-//   try {
-//     const result = await cloudinary.uploader.upload(imagePath);
-//     console.log(result);
-//     return result.public_id;
-//   } catch (error: any) {
-//     console.error(error);
-//   }
-// };
-// import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import path from "path";
 
@@ -21,7 +10,7 @@ export class UploadService {
 
       // Deletar o arquivo local após o upload
       fs.unlinkSync(filePath);
-
+      console.log(result.secure_url);
       // Retornar a URL da imagem no Cloudinary
       return result.secure_url;
     } catch (error: any) {

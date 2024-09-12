@@ -2,8 +2,8 @@ import { MemberInputDTO, MemberInputUpdateDTO } from "../dto/member.dto";
 import { Member } from "../models/member.model";
 
 export class MemberRepository {
-  async save(data: MemberInputDTO) {
-    const member = new Member(data);
+  async save(data: MemberInputDTO, imageLink: string) {
+    const member = new Member(data, imageLink);
     return await member.save();
   }
 

@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
+import path from "path";
 import { MemberService } from "../service/member.service";
-import { MemberInputDTO, MemberInputUpdateDTO } from "../dto/member.dto";
-import { uploadImage } from "../service/cloudinary";
+import {
+  FileDTO,
+  MemberInputDTO,
+  MemberInputUpdateDTO,
+} from "../dto/member.dto";
 export class MemberController {
   private memberService = new MemberService();
 
@@ -15,10 +19,19 @@ export class MemberController {
   }
 
   async insert(response: Response, request: Request) {
+    if (!request.file) {
+      return response
+        .status(400)
+        .json({ message: "Nenhuma imagem foi enviada." });
+    }
+    const tempFilePath = path.resolve(request.file.path);
+    const { name } = request.body;
+    console.log(name);
+    console.log(request.body);
     const memberDto: MemberInputDTO = request.body;
 
     try {
-      const input = await this.memberService.insert(memberDto);
+      const input = await this.memberService.insert(memberDto, tempFilePath);
       return response.status(201).json(input);
     } catch (error: any) {
       return response.status(400).json({ errorMessage: error.message });
@@ -44,13 +57,5 @@ export class MemberController {
     } catch (error: any) {
       return response.status(400).json({ errorMessage: error.message });
     }
-  }
-
-  async upload(response: Response, request: Request) {
-    // const f = request.fi
-    // console.log(request.);
-    const { path } = request.body;
-    const j = await uploadImage(path);
-    return response.status(200).json(j);
   }
 }
