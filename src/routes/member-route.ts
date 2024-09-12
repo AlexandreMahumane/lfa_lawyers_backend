@@ -12,20 +12,20 @@ route.get("/show", (request, response) =>
 route.post(
   "/insert",
   VerifyToken,
-  upload.single("image"),
+  // upload.single("image"),
   (request, response) => memberController.insert(response, request)
 );
 
 route.put(
   "/update/:id",
   VerifyToken,
-  upload.single("image"),
+  // upload.single("image"),
   (request, response) => memberController.update(response, request)
 );
 route.delete(
   "/delete/:id",
   VerifyToken,
-  upload.single("image"),
+  // upload.single("image"),
   (request, response) => memberController.delete(response, request)
 );
 

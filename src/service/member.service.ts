@@ -9,17 +9,18 @@ import { UploadService } from "./cloudinary";
 export class MemberService {
   private memberRepository = new MemberRepository();
   private uploadService = new UploadService();
-  async insert(data: MemberInputDTO, file: string) {
+
+  async insert(data: MemberInputDTO) {
     console.log("dto", data);
     const findMember = await this.memberRepository.findByName(data.name);
     console.log(">>");
-    const upload: string = await this.uploadService.uploadImage(file);
+    // const upload: string = await this.uploadService.uploadImage(file);
     console.log(">");
     if (findMember) {
       throw new Error("Member already exits");
     }
 
-    return await this.memberRepository.save(data, upload);
+    return await this.memberRepository.save(data);
   }
   async update(id: string, data: MemberInputUpdateDTO) {
     const checkMember = await this.memberRepository.findById(id);

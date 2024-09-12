@@ -19,19 +19,19 @@ export class MemberController {
   }
 
   async insert(response: Response, request: Request) {
-    if (!request.file) {
-      return response
-        .status(400)
-        .json({ message: "Nenhuma imagem foi enviada." });
-    }
-    const tempFilePath = path.resolve(request.file.path);
-    const { name } = request.body;
-    console.log(name);
-    console.log(request.body);
+    // if (!request.file) {
+    //   return response
+    //     .status(400)
+    //     .json({ message: "Nenhuma imagem foi enviada." });
+    // }
+    // const tempFilePath = path.resolve(request.file.path);
+    // const { name } = request.body;
+    // console.log(name);
+    // console.log(request.body);
     const memberDto: MemberInputDTO = request.body;
 
     try {
-      const input = await this.memberService.insert(memberDto, tempFilePath);
+      const input = await this.memberService.insert(memberDto);
       return response.status(201).json(input);
     } catch (error: any) {
       return response.status(400).json({ errorMessage: error.message });

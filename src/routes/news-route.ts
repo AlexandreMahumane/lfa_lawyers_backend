@@ -11,19 +11,19 @@ route.get("/show", (request, response) =>
 route.post(
   "/insert",
   VerifyToken,
-  upload.single("image"),
+  // upload.single("image"),
   (request, response) => newsController.insert(response, request)
 );
 route.put(
   "/update/:id",
   VerifyToken,
-  upload.single("image"),
+  // upload.single("image"),
   (request, response) => newsController.update(response, request)
 );
 route.delete(
   "/delete/:id",
   VerifyToken,
-  upload.single("image"),
+  // upload.single("image"),
   (request, response) => newsController.delete(response, request)
 );
 module.exports = route;
