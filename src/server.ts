@@ -1,12 +1,15 @@
 import express from "express";
 import { connectDB } from "./database/index";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 require("dotenv").config();
 
 const port = process.env.PORT;
 const app = express();
 app.use(express.json());
+app.use(cors());
 connectDB();
+
 // app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/user", require("./routes/user-route"));
